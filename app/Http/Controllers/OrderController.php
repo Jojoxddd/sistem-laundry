@@ -6,15 +6,22 @@ use App\Models\Order;
 use App\Models\Pelanggan;
 use App\Models\Karyawan;
 use App\Models\Layanan;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    protected WhatsAppService $wa;
+
+    public function __construct(WhatsAppService $wa)
+    {
+        $this->wa = $wa;
+    }
+
     public function index()
     {
         $orders = Order::with(['pelanggan', 'karyawan', 'layanan', 'pembayaran'])
-            ->latest()
-            ->paginate(10);
+            ->latest()->paginate(10);
         return view('order.index', compact('orders'));
     }
 
@@ -41,7 +48,7 @@ class OrderController extends Controller
         $layanan     = Layanan::findOrFail($request->layanan_id);
         $total_harga = $layanan->harga_per_kg * $request->berat_kg;
 
-        Order::create([
+        $order = Order::create([
             'kode_order'      => Order::generateKodeOrder(),
             'pelanggan_id'    => $request->pelanggan_id,
             'karyawan_id'     => $request->karyawan_id,
@@ -53,6 +60,20 @@ class OrderController extends Controller
             'status'          => 'menunggu',
             'catatan'         => $request->catatan,
         ]);
+
+        // ── Notif WA: order diterima ─────────────────────────
+        $pelanggan = Pelanggan::find($request->pelanggan_id);
+        if ($pelanggan && $pelanggan->notif_wa && $pelanggan->no_telp) {
+            $this->wa->notifOrderDiterima(
+                $pelanggan->no_telp,
+                $pelanggan->nama,
+                $order->kode_order,
+                $layanan->nama_layanan,
+                $request->berat_kg,
+                $total_harga
+            );
+        }
+        // ─────────────────────────────────────────────────────
 
         return redirect()->route('order.index')->with('success', 'Order berhasil dibuat!');
     }
@@ -86,6 +107,7 @@ class OrderController extends Controller
 
         $layanan     = Layanan::findOrFail($request->layanan_id);
         $total_harga = $layanan->harga_per_kg * $request->berat_kg;
+        $statusLama  = $order->status;
 
         $order->update([
             'pelanggan_id'    => $request->pelanggan_id,
@@ -98,6 +120,20 @@ class OrderController extends Controller
             'status'          => $request->status,
             'catatan'         => $request->catatan,
         ]);
+
+        // ── Notif WA jika status berubah ─────────────────────
+        if ($statusLama !== $request->status) {
+            $pelanggan = Pelanggan::find($request->pelanggan_id);
+            if ($pelanggan && $pelanggan->notif_wa && $pelanggan->no_telp) {
+                $this->wa->notifStatusBerubah(
+                    $pelanggan->no_telp,
+                    $pelanggan->nama,
+                    $order->kode_order,
+                    $request->status
+                );
+            }
+        }
+        // ─────────────────────────────────────────────────────
 
         return redirect()->route('order.index')->with('success', 'Order berhasil diupdate!');
     }
@@ -113,7 +149,24 @@ class OrderController extends Controller
         $request->validate([
             'status' => 'required|in:menunggu,diproses,selesai,diambil',
         ]);
+
+        $statusLama = $order->status;
         $order->update(['status' => $request->status]);
+
+        // ── Notif WA jika status berubah ─────────────────────
+        if ($statusLama !== $request->status) {
+            $pelanggan = $order->pelanggan;
+            if ($pelanggan && $pelanggan->notif_wa && $pelanggan->no_telp) {
+                $this->wa->notifStatusBerubah(
+                    $pelanggan->no_telp,
+                    $pelanggan->nama,
+                    $order->kode_order,
+                    $request->status
+                );
+            }
+        }
+        // ─────────────────────────────────────────────────────
+
         return back()->with('success', 'Status order berhasil diubah!');
     }
 }

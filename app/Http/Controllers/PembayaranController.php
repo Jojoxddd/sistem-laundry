@@ -5,10 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\LoyaltyPoint;
 use App\Models\Order;
 use App\Models\Pembayaran;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 
 class PembayaranController extends Controller
 {
+    protected WhatsAppService $wa;
+
+    public function __construct(WhatsAppService $wa)
+    {
+        $this->wa = $wa;
+    }
+
     public function index()
     {
         $pembayaran = Pembayaran::with(['order.pelanggan', 'order.layanan'])->latest()->paginate(10);
@@ -28,7 +36,7 @@ class PembayaranController extends Controller
             'metode'       => 'required|in:tunai,transfer,qris',
         ]);
 
-        $order     = Order::with('pelanggan')->findOrFail($request->order_id);
+        $order     = Order::with(['pelanggan', 'layanan'])->findOrFail($request->order_id);
         $kembalian = $request->jumlah_bayar - $order->total_harga;
 
         Pembayaran::create([
@@ -42,19 +50,49 @@ class PembayaranController extends Controller
 
         $order->update(['status' => 'selesai']);
 
-        // ── Otomatis tambah loyalty points ──────────────────
-        // Setiap Rp 1.000 = 1 poin
-        $poin = (int) floor($order->total_harga / 1000);
-        if ($poin > 0 && $order->pelanggan_id) {
+        // ── Loyalty Points: Rp 1.000 = 1 poin ──────────────
+        $poinBaru = (int) floor($order->total_harga / 1000);
+        $totalPoin = 0;
+        $level = 'Bronze';
+
+        if ($poinBaru > 0 && $order->pelanggan_id) {
             $loyalty = LoyaltyPoint::firstOrCreate(
                 ['pelanggan_id' => $order->pelanggan_id],
                 ['total_poin' => 0, 'level' => 'Bronze']
             );
-            $loyalty->tambahPoin($poin, 'Order ' . $order->kode_order, $order->id);
+            $loyalty->tambahPoin($poinBaru, 'Order ' . $order->kode_order, $order->id);
+            $totalPoin = $loyalty->fresh()->total_poin;
+            $level     = $loyalty->fresh()->level;
         }
-        // ────────────────────────────────────────────────────
 
-        return redirect()->route('order.show', $order)
-            ->with('success', 'Pembayaran berhasil! Pelanggan mendapat ' . $poin . ' poin loyalty.');
+        // ── Notifikasi WhatsApp ──────────────────────────────
+        $pelanggan = $order->pelanggan;
+        if ($pelanggan && $pelanggan->notif_wa && $pelanggan->no_telp) {
+            // Notif status selesai
+            $this->wa->notifStatusBerubah(
+                $pelanggan->no_telp,
+                $pelanggan->nama,
+                $order->kode_order,
+                'selesai'
+            );
+            // Notif poin bertambah (jika dapat poin)
+            if ($poinBaru > 0) {
+                $this->wa->notifPoinBertambah(
+                    $pelanggan->no_telp,
+                    $pelanggan->nama,
+                    $poinBaru,
+                    $totalPoin,
+                    $level
+                );
+            }
+        }
+        // ─────────────────────────────────────────────────────
+
+        $msg = 'Pembayaran berhasil!';
+        if ($poinBaru > 0) {
+            $msg .= " Pelanggan mendapat +{$poinBaru} poin loyalty (total: {$totalPoin} poin).";
+        }
+
+        return redirect()->route('order.show', $order)->with('success', $msg);
     }
 }

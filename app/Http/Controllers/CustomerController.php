@@ -7,22 +7,26 @@ use App\Models\LoyaltyPoint;
 use App\Models\LoyaltyTransaction;
 use App\Models\Order;
 use App\Models\Pelanggan;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    /**
-     * Landing page utama
-     */
+    protected WhatsAppService $wa;
+
+    public function __construct(WhatsAppService $wa)
+    {
+        $this->wa = $wa;
+    }
+
+    // Landing page
     public function index()
     {
         $layanan = Layanan::all();
         return view('customer.landing', compact('layanan'));
     }
 
-    /**
-     * API: Estimasi harga otomatis (dipanggil via AJAX)
-     */
+    // API estimasi harga (AJAX)
     public function estimasiHarga(Request $request)
     {
         $request->validate([
@@ -42,9 +46,7 @@ class CustomerController extends Controller
         ]);
     }
 
-    /**
-     * Halaman cek status cucian + hasil
-     */
+    // Cek status cucian
     public function cekStatus(Request $request)
     {
         $order = null;
@@ -60,9 +62,7 @@ class CustomerController extends Controller
         return view('customer.cek-status', compact('order', 'kode', 'layanan'));
     }
 
-    /**
-     * Halaman loyalty points pelanggan
-     */
+    // Halaman loyalty points
     public function loyaltyPoints(Request $request)
     {
         $pelanggan = null;
@@ -89,9 +89,7 @@ class CustomerController extends Controller
         return view('customer.loyalty', compact('pelanggan', 'loyalty', 'transaksi', 'noTelp', 'rewards'));
     }
 
-    /**
-     * Tukar poin dengan reward
-     */
+    // Tukar poin
     public function tukarPoin(Request $request)
     {
         $request->validate([
@@ -117,42 +115,68 @@ class CustomerController extends Controller
             return back()->with('error', 'Poin tidak cukup untuk reward ini.');
         }
 
-        return back()->with('success', 'Berhasil menukar ' . $reward['poin'] . ' poin dengan "' . $reward['nama'] . '"! Tunjukkan halaman ini ke kasir.');
+        return back()
+            ->with('success', 'Berhasil tukar ' . $reward['poin'] . ' poin dengan "' . $reward['nama'] . '"! Tunjukkan halaman ini ke kasir.')
+            ->with('reward_ditukar', $reward['nama']);
     }
 
-    /**
-     * Aktifkan / nonaktifkan notifikasi WhatsApp
-     */
+    // Toggle notifikasi WhatsApp — cek database dulu, kirim WA jika nomor terdaftar
     public function toggleNotifWa(Request $request)
     {
         $request->validate([
-            'no_telp' => 'required',
+            'no_telp' => 'required|string',
         ]);
 
         $pelanggan = Pelanggan::where('no_telp', $request->no_telp)->first();
 
         if (!$pelanggan) {
-            return back()->with('error', 'Nomor telepon tidak terdaftar sebagai pelanggan.');
+            return back()->with('error', '❌ Nomor ' . $request->no_telp . ' belum terdaftar sebagai pelanggan. Daftarkan nomor kamu ke outlet terlebih dahulu.');
         }
 
+        // Toggle status notif_wa
         $pelanggan->update(['notif_wa' => !$pelanggan->notif_wa]);
-        $status = $pelanggan->notif_wa ? 'diaktifkan' : 'dinonaktifkan';
 
-        return back()->with('success', "Notifikasi WhatsApp berhasil $status untuk nomor {$pelanggan->no_telp}.");
+        if ($pelanggan->notif_wa) {
+            // Kirim WA konfirmasi aktivasi
+            $terkirim = $this->wa->notifAktivasi($pelanggan->no_telp, $pelanggan->nama);
+
+            $msg = '✅ Notifikasi WhatsApp berhasil diaktifkan untuk ' . $pelanggan->nama . '!';
+            if ($terkirim) {
+                $msg .= ' Pesan konfirmasi sudah dikirim ke WhatsApp kamu.';
+            }
+            return back()->with('success', $msg);
+        } else {
+            return back()->with('success', 'Notifikasi WhatsApp dinonaktifkan untuk ' . $pelanggan->nama . '.');
+        }
     }
 
-    /**
-     * Helper: daftar reward yang tersedia
-     */
+    // Cek apakah nomor terdaftar (AJAX — untuk feedback real-time di form)
+    public function cekNomor(Request $request)
+    {
+        $nomor = $request->query('no_telp', '');
+        $pelanggan = Pelanggan::where('no_telp', $nomor)->first();
+
+        if (!$pelanggan) {
+            return response()->json(['terdaftar' => false, 'pesan' => 'Nomor belum terdaftar']);
+        }
+
+        return response()->json([
+            'terdaftar' => true,
+            'nama'      => $pelanggan->nama,
+            'notif_wa'  => (bool) $pelanggan->notif_wa,
+            'pesan'     => 'Halo, ' . $pelanggan->nama . '!',
+        ]);
+    }
+
     private function daftarReward(): array
     {
         return [
-            ['id' => 'diskon20',   'nama' => 'Diskon 20%',           'poin' => 300,  'icon' => 'bi-percent'],
-            ['id' => 'cuci2kg',    'nama' => 'Cuci gratis 2 kg',     'poin' => 500,  'icon' => 'bi-droplet'],
-            ['id' => 'gratisakir', 'nama' => 'Setrika gratis 3 kg',  'poin' => 400,  'icon' => 'bi-lightning'],
-            ['id' => 'cuci5kg',    'nama' => 'Cuci gratis 5 kg',     'poin' => 1000, 'icon' => 'bi-stars'],
-            ['id' => 'pickup',     'nama' => 'Pickup & delivery gratis', 'poin' => 600, 'icon' => 'bi-truck'],
-            ['id' => 'premium',    'nama' => 'Upgrade layanan express', 'poin' => 800, 'icon' => 'bi-arrow-up-circle'],
+            ['id' => 'diskon20',   'nama' => 'Diskon 20%',              'poin' => 300,  'icon' => 'bi-percent'],
+            ['id' => 'cuci2kg',    'nama' => 'Cuci gratis 2 kg',        'poin' => 500,  'icon' => 'bi-droplet'],
+            ['id' => 'setrika3kg', 'nama' => 'Setrika gratis 3 kg',     'poin' => 400,  'icon' => 'bi-lightning'],
+            ['id' => 'cuci5kg',    'nama' => 'Cuci gratis 5 kg',        'poin' => 1000, 'icon' => 'bi-stars'],
+            ['id' => 'pickup',     'nama' => 'Pickup & delivery gratis','poin' => 600,  'icon' => 'bi-truck'],
+            ['id' => 'express',    'nama' => 'Upgrade ke express',       'poin' => 800,  'icon' => 'bi-arrow-up-circle'],
         ];
     }
 }

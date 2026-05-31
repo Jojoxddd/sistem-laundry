@@ -18,6 +18,7 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/loyalty',         [CustomerController::class, 'loyaltyPoints'])->name('loyalty');
     Route::post('/loyalty/tukar',  [CustomerController::class, 'tukarPoin'])->name('loyalty.tukar');
     Route::post('/notif-wa',       [CustomerController::class, 'toggleNotifWa'])->name('notif-wa');
+    Route::get('/cek-nomor',       [CustomerController::class, 'cekNomor'])->name('cek-nomor');
 });
 
 // Root → landing page pelanggan

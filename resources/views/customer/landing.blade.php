@@ -198,13 +198,24 @@
                 <p class="text-muted mb-3" style="font-size:14px">
                     Kami kirim update otomatis saat cucianmu masuk, sedang diproses, dan siap diambil — langsung ke WhatsApp kamu.
                 </p>
-                <form action="{{ route('customer.notif-wa') }}" method="POST" class="d-flex gap-2 flex-wrap">
+
+                {{-- Feedback cek nomor real-time --}}
+                <div id="wa-feedback" class="mb-2" style="font-size:13px;min-height:20px"></div>
+
+                <form action="{{ route('customer.notif-wa') }}" method="POST" class="d-flex gap-2 flex-wrap" id="wa-form">
                     @csrf
-                    <input type="text" name="no_telp" class="form-control" placeholder="Nomor WhatsApp (contoh: 08123456789)" style="max-width:280px">
-                    <button type="submit" class="btn btn-green px-4">
-                        <i class="bi bi-whatsapp me-2"></i>Aktifkan sekarang
+                    <input type="text" name="no_telp" id="no-telp-input"
+                        class="form-control"
+                        placeholder="Nomor WhatsApp terdaftar (contoh: 08123456789)"
+                        style="max-width:300px"
+                        autocomplete="off">
+                    <button type="submit" class="btn btn-green px-4" id="wa-btn" disabled>
+                        <i class="bi bi-whatsapp me-2"></i><span id="wa-btn-text">Aktifkan</span>
                     </button>
                 </form>
+                <div class="mt-2" style="font-size:12px;color:var(--green-dark)">
+                    <i class="bi bi-info-circle me-1"></i>Nomor harus terdaftar sebagai pelanggan di outlet kami
+                </div>
             </div>
         </div>
     </div>
@@ -228,9 +239,10 @@
 
 @push('scripts')
 <script>
+// ── Estimasi Harga ───────────────────────────────────────────
 function hitungHarga() {
-    const sel = document.getElementById('layanan-sel');
-    const opt = sel.options[sel.selectedIndex];
+    const sel   = document.getElementById('layanan-sel');
+    const opt   = sel.options[sel.selectedIndex];
     const harga = parseFloat(opt.getAttribute('data-harga')) || 0;
     const hari  = opt.getAttribute('data-hari') || 1;
     const berat = parseFloat(document.getElementById('berat-input').value) || 0;
@@ -239,5 +251,54 @@ function hitungHarga() {
     document.getElementById('est-hari').textContent = 'Estimasi selesai: ' + hari + ' hari';
 }
 document.addEventListener('DOMContentLoaded', hitungHarga);
+
+// ── Cek Nomor WhatsApp Real-time ────────────────────────────
+const noTelpInput = document.getElementById('no-telp-input');
+const waFeedback  = document.getElementById('wa-feedback');
+const waBtn       = document.getElementById('wa-btn');
+const waBtnText   = document.getElementById('wa-btn-text');
+let debounceTimer = null;
+
+if (noTelpInput) {
+    noTelpInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        const nomor = this.value.trim();
+
+        if (nomor.length < 8) {
+            waFeedback.innerHTML = '';
+            waBtn.disabled = true;
+            return;
+        }
+
+        waFeedback.innerHTML = '<span class="text-muted"><i class="bi bi-hourglass-split me-1"></i>Mengecek nomor...</span>';
+
+        debounceTimer = setTimeout(() => {
+            fetch(`{{ route('customer.cek-nomor') }}?no_telp=${encodeURIComponent(nomor)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.terdaftar) {
+                        const statusNotif = data.notif_wa
+                            ? '<span class="badge rounded-pill ms-1" style="background:var(--green-light);color:var(--green-dark);font-size:11px"><i class="bi bi-check-circle me-1"></i>Notif aktif</span>'
+                            : '<span class="badge rounded-pill ms-1" style="background:#fef9c3;color:#713f12;font-size:11px"><i class="bi bi-bell-slash me-1"></i>Notif nonaktif</span>';
+
+                        waFeedback.innerHTML = `<span style="color:var(--green-dark)"><i class="bi bi-person-check-fill me-1"></i>Halo, <strong>${data.nama}</strong>! ${statusNotif}</span>`;
+                        waBtn.disabled = false;
+                        waBtnText.textContent = data.notif_wa ? 'Nonaktifkan notif' : 'Aktifkan notif';
+                        waBtn.style.background = data.notif_wa ? '#dc2626' : '';
+                        waBtn.style.borderColor = data.notif_wa ? '#dc2626' : '';
+                    } else {
+                        waFeedback.innerHTML = '<span style="color:#dc2626"><i class="bi bi-x-circle me-1"></i>Nomor belum terdaftar. Daftar dulu ke outlet kami.</span>';
+                        waBtn.disabled = true;
+                        waBtnText.textContent = 'Aktifkan';
+                        waBtn.style.background = '';
+                    }
+                })
+                .catch(() => {
+                    waFeedback.innerHTML = '<span class="text-muted">Gagal mengecek nomor.</span>';
+                    waBtn.disabled = true;
+                });
+        }, 600);
+    });
+}
 </script>
 @endpush
