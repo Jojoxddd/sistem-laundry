@@ -8,6 +8,12 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * CATATAN: File ini menggantikan KEDUA file berikut:
+     *   - 0001_01_01_000000_create_users_table.php  (original Laravel default)
+     *   - 2024_01_01_000001_create_users_table.php   (duplikat - HAPUS file ini)
+     *
+     * Masalah lama: tabel 'users' dibuat 2x → error "table already exists"
      */
     public function up(): void
     {
@@ -17,6 +23,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('role')->default('karyawan'); // admin, karyawan, manajer
             $table->rememberToken();
             $table->timestamps();
         });
@@ -42,8 +49,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };

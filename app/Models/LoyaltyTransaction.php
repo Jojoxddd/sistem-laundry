@@ -5,24 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pembayaran extends Model
+class LoyaltyTransaction extends Model
 {
     use HasFactory;
 
-    protected $table = 'pembayaran';
+    protected $table = 'loyalty_transactions';
 
     protected $fillable = [
+        'pelanggan_id',
+        'poin',
+        'keterangan',
         'order_id',
-        'jumlah_bayar',
-        'kembalian',
-        'metode',
-        'status',
-        'tanggal_bayar',
     ];
 
-    protected $casts = [
-        'tanggal_bayar' => 'datetime',
-    ];
+    public function pelanggan()
+    {
+        return $this->belongsTo(Pelanggan::class);
+    }
 
     public function order()
     {
