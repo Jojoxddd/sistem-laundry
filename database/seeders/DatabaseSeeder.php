@@ -66,11 +66,14 @@ class DatabaseSeeder extends Seeder
 
         // Layanan
         Layanan::insert([
-            ['nama_layanan' => 'Cuci & Setrika',     'harga_per_kg' => 7000,  'estimasi_hari' => 2, 'keterangan' => 'Dicuci dan disetrika rapi', 'created_at' => now(), 'updated_at' => now()],
-            ['nama_layanan' => 'Cuci Kering',        'harga_per_kg' => 5000,  'estimasi_hari' => 1, 'keterangan' => 'Dicuci dan dikeringkan saja', 'created_at' => now(), 'updated_at' => now()],
-            ['nama_layanan' => 'Setrika Saja',       'harga_per_kg' => 3000,  'estimasi_hari' => 1, 'keterangan' => 'Hanya setrika',              'created_at' => now(), 'updated_at' => now()],
-            ['nama_layanan' => 'Cuci Express',       'harga_per_kg' => 12000, 'estimasi_hari' => 1, 'keterangan' => 'Selesai di hari yang sama',  'created_at' => now(), 'updated_at' => now()],
-            ['nama_layanan' => 'Cuci Bed Cover',     'harga_per_kg' => 15000, 'estimasi_hari' => 3, 'keterangan' => 'Khusus bed cover & selimut', 'created_at' => now(), 'updated_at' => now()],
+            ['nama_layanan' => 'Laundry Kiloan',    'harga_per_kg' => 7000,  'estimasi_hari' => 2, 'keterangan' => 'Cuci + kering, dihitung per kg',         'created_at' => now(), 'updated_at' => now()],
+            ['nama_layanan' => 'Cuci & Setrika',    'harga_per_kg' => 10000, 'estimasi_hari' => 3, 'keterangan' => 'Dicuci dan disetrika rapi, per kg',       'created_at' => now(), 'updated_at' => now()],
+            ['nama_layanan' => 'Laundry Bedcover',  'harga_per_kg' => 35000, 'estimasi_hari' => 3, 'keterangan' => 'Dihitung per item (pcs)',                  'created_at' => now(), 'updated_at' => now()],
+            ['nama_layanan' => 'Laundry Boneka',    'harga_per_kg' => 25000, 'estimasi_hari' => 3, 'keterangan' => 'Dihitung per item (pcs)',                  'created_at' => now(), 'updated_at' => now()],
+            ['nama_layanan' => 'Laundry Karpet',    'harga_per_kg' => 15000, 'estimasi_hari' => 5, 'keterangan' => 'Dihitung per meter persegi (m²)',          'created_at' => now(), 'updated_at' => now()],
+            ['nama_layanan' => 'Laundry Sprei',     'harga_per_kg' => 20000, 'estimasi_hari' => 3, 'keterangan' => 'Dihitung per item (pcs)',                  'created_at' => now(), 'updated_at' => now()],
+            ['nama_layanan' => 'Laundry Selimut',   'harga_per_kg' => 25000, 'estimasi_hari' => 3, 'keterangan' => 'Dihitung per item (pcs)',                  'created_at' => now(), 'updated_at' => now()],
+            ['nama_layanan' => 'Laundry Gorden',    'harga_per_kg' => 12000, 'estimasi_hari' => 5, 'keterangan' => 'Dihitung per meter persegi (m²)',          'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

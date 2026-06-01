@@ -18,11 +18,11 @@
         .bl-nav .brand small { display:block; font-size:11px; font-weight:400; color:#64748b; }
         .bl-nav .nav-link { color:#64748b; font-size:14px; padding:8px 14px !important; }
         .bl-nav .nav-link:hover, .bl-nav .nav-link.active { color:var(--sky-dark); }
-        .btn-order-nav { background:var(--sky-dark); color:#fff; border:none; padding:9px 22px; border-radius:10px; font-size:14px; text-decoration:none; }
+        .btn-order-nav { background:var(--sky-dark); color:#fff; border:none; padding:9px 22px; border-radius:50px; font-size:14px; text-decoration:none; }
         .btn-order-nav:hover { background:#0369a1; color:#fff; }
-        .btn-sky { background:var(--sky-dark); color:#fff; border:none; border-radius:10px; }
+        .btn-sky { background:var(--sky-dark); color:#fff; border:none; border-radius:50px; }
         .btn-sky:hover { background:#0369a1; color:#fff; }
-        .btn-sky-outline { background:transparent; color:var(--sky-dark); border:1.5px solid var(--sky-dark); border-radius:10px; }
+        .btn-sky-outline { background:transparent; color:var(--sky-dark); border:1.5px solid var(--sky-dark); border-radius:50px; }
         .btn-sky-outline:hover { background:var(--sky-light); color:var(--sky-dark); }
         .btn-green { background:var(--green); color:#fff; border:none; border-radius:10px; }
         .btn-green:hover { background:var(--green-dark); color:#fff; }
