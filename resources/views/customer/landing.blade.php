@@ -174,89 +174,63 @@
 .svc-price-card__ket { font-size: 11px; color: #94a3b8; margin-top: 4px; }
 
 /* ── Loyalty Section ─────────────────────────────── */
-.loyalty-section { background: var(--sky-light); }
-.loyalty-wrap {
-    display: flex; gap: 56px; align-items: center;
+.loyalty-section { background: #fff; border-top: 1px solid #f1f5f9; }
+.loyalty-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    padding: 72px 0;
 }
-.loyalty-left { flex: 1; min-width: 0; }
-.loyalty-right { flex-shrink: 0; width: 300px; }
-
-.loyalty-eyebrow {
-    font-size: 13px; font-weight: 600; color: var(--sky-dark);
-    margin-bottom: 10px; letter-spacing: .02em;
+.loyalty-label {
+    font-size: 11px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--sky-dark);
+    margin-bottom: 16px;
 }
 .loyalty-heading {
-    font-size: 1.75rem; font-weight: 700; color: #0f172a;
-    line-height: 1.3; margin-bottom: 12px;
+    font-size: 2rem; font-weight: 700; color: #0f172a;
+    line-height: 1.25; margin-bottom: 16px; letter-spacing: -.02em;
 }
 .loyalty-desc {
-    font-size: 14px; color: #64748b; line-height: 1.7; margin-bottom: 20px;
+    font-size: 14.5px; color: #64748b; line-height: 1.75;
+    margin-bottom: 32px; max-width: 380px;
+}
+.loyalty-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 600; color: #0f172a;
+    text-decoration: none; border-bottom: 1.5px solid #0f172a;
+    padding-bottom: 2px; transition: opacity .15s;
+}
+.loyalty-link:hover { opacity: .6; color: #0f172a; }
+
+/* Right side — reward table */
+.loyalty-table { width: 100%; border-collapse: collapse; }
+.loyalty-table thead th {
+    font-size: 11px; font-weight: 600; letter-spacing: .07em;
+    text-transform: uppercase; color: #94a3b8;
+    padding: 0 0 14px; border-bottom: 1px solid #f1f5f9;
+    text-align: left;
+}
+.loyalty-table thead th:last-child { text-align: right; }
+.loyalty-table tbody tr { border-bottom: 1px solid #f8fafc; }
+.loyalty-table tbody tr:last-child { border-bottom: none; }
+.loyalty-table tbody td {
+    padding: 16px 0; font-size: 14px; color: #1e293b; vertical-align: middle;
+}
+.loyalty-table tbody td:last-child { text-align: right; }
+.loyalty-pts {
+    font-size: 13px; font-weight: 700; color: var(--sky-dark);
+    background: var(--sky-light); padding: 3px 10px;
+    border-radius: 6px; white-space: nowrap;
+}
+.loyalty-note {
+    margin-top: 28px; padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 13px; color: #94a3b8; line-height: 1.6;
 }
 
-.loyalty-perks { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
-.loyalty-perk {
-    display: flex; align-items: center; gap: 14px;
-    background: #fff; border-radius: 14px; padding: 12px 16px;
-    border: 1px solid #e2e8f0;
-}
-.loyalty-perk__icon { font-size: 22px; flex-shrink: 0; }
-.loyalty-perk__title { font-weight: 700; font-size: 14px; color: #0f172a; }
-.loyalty-perk__sub { font-size: 12px; color: #64748b; }
-
-/* Member card */
-.loyalty-card {
-    background: linear-gradient(135deg, #0284C7 0%, #15803D 100%);
-    border-radius: 20px; padding: 22px 22px 18px;
-    color: #fff; box-shadow: 0 12px 40px rgba(2,132,199,.25);
-    margin-bottom: 12px;
-}
-.loyalty-card__top {
-    display: flex; justify-content: space-between; align-items: flex-start;
-    margin-bottom: 18px;
-}
-.loyalty-card__label { font-size: 11px; opacity: .75; letter-spacing: .06em; text-transform: uppercase; }
-.loyalty-card__name { font-size: 15px; font-weight: 700; margin-top: 2px; }
-.loyalty-card__trophy { font-size: 28px; opacity: .85; }
-.loyalty-card__poin-label { font-size: 11px; opacity: .75; margin-bottom: 2px; }
-.loyalty-card__poin { font-size: 2rem; font-weight: 800; line-height: 1; margin-bottom: 14px; }
-.loyalty-card__poin span { font-size: 14px; font-weight: 400; opacity: .8; }
-.loyalty-card__progress-label {
-    display: flex; justify-content: space-between;
-    font-size: 11px; opacity: .8; margin-bottom: 6px;
-}
-.loyalty-card__bar {
-    background: rgba(255,255,255,.25); border-radius: 99px;
-    height: 6px; margin-bottom: 16px;
-}
-.loyalty-card__bar-fill {
-    background: #fff; border-radius: 99px; height: 100%;
-    transition: width .6s ease;
-}
-.loyalty-card__bottom {
-    display: flex; justify-content: space-between;
-    font-size: 11px; opacity: .75;
-}
-.loyalty-card__level { font-weight: 600; opacity: 1; }
-
-/* Notif floating */
-.loyalty-notif {
-    background: #fff; border-radius: 14px;
-    padding: 12px 16px; display: flex; align-items: center; gap: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,.08);
-    border: 1px solid #e2e8f0;
-    animation: notif-in .5s ease both .3s; opacity: 0;
-}
-.loyalty-notif__icon { font-size: 20px; }
-.loyalty-notif__title { font-size: 13px; font-weight: 700; color: #0f172a; }
-.loyalty-notif__sub { font-size: 12px; color: #64748b; }
-@keyframes notif-in {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 991px) {
-    .loyalty-wrap { flex-direction: column; gap: 32px; }
-    .loyalty-right { width: 100%; max-width: 340px; margin: 0 auto; }
+@media (max-width: 900px) {
+    .loyalty-inner { grid-template-columns: 1fr; gap: 48px; padding: 48px 0; }
 }
 .howto-section { background: #fff; }
 .howto-card {
@@ -768,80 +742,59 @@
     </div>
 </section>
 
-{{-- CTA LOYALTY --}}
-<section class="loyalty-section py-5">
+{{-- LOYALTY --}}
+<section class="loyalty-section">
     <div class="container">
-        <div class="loyalty-wrap">
+        <div class="loyalty-inner">
 
-            {{-- Kiri: teks + CTA --}}
-            <div class="loyalty-left">
-                <div class="loyalty-eyebrow">🏆 Program Loyalty</div>
-                <h2 class="loyalty-heading">Makin sering laundry,<br>makin banyak untungnya.</h2>
-                <p class="loyalty-desc">Setiap Rp 1.000 yang kamu bayar = 1 poin. Kumpulkan dan tukar langsung dengan diskon atau gratis laundry.</p>
-
-                <div class="loyalty-perks">
-                    <div class="loyalty-perk">
-                        <span class="loyalty-perk__icon">👕</span>
-                        <div>
-                            <div class="loyalty-perk__title">500 poin</div>
-                            <div class="loyalty-perk__sub">Gratis laundry 3 kg</div>
-                        </div>
-                    </div>
-                    <div class="loyalty-perk">
-                        <span class="loyalty-perk__icon">💸</span>
-                        <div>
-                            <div class="loyalty-perk__title">200 poin</div>
-                            <div class="loyalty-perk__sub">Diskon Rp 10.000</div>
-                        </div>
-                    </div>
-                    <div class="loyalty-perk">
-                        <span class="loyalty-perk__icon">🎁</span>
-                        <div>
-                            <div class="loyalty-perk__title">1.000 poin</div>
-                            <div class="loyalty-perk__sub">Gratis laundry 10 kg</div>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="{{ route('customer.loyalty') }}" class="btn btn-sky btn-lg mt-2 px-4">
-                    Cek poin saya <i class="bi bi-arrow-right ms-2"></i>
+            {{-- Kiri: copy --}}
+            <div>
+                <div class="loyalty-label">Program Loyalty</div>
+                <h2 class="loyalty-heading">Makin sering<br>laundry, makin<br>banyak untungnya.</h2>
+                <p class="loyalty-desc">
+                    Setiap Rp 1.000 yang kamu bayar otomatis jadi 1 poin.
+                    Tidak perlu daftar ulang — poin langsung masuk setelah pembayaran.
+                </p>
+                <a href="{{ route('customer.loyalty') }}" class="loyalty-link">
+                    Cek poin saya <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
 
-            {{-- Kanan: kartu poin ilustrasi --}}
-            <div class="loyalty-right">
-                {{-- Kartu member --}}
-                <div class="loyalty-card">
-                    <div class="loyalty-card__top">
-                        <div>
-                            <div class="loyalty-card__label">Member Card</div>
-                            <div class="loyalty-card__name">Chingu Laundry</div>
-                        </div>
-                        <i class="bi bi-trophy-fill loyalty-card__trophy"></i>
-                    </div>
-                    <div class="loyalty-card__poin-label">Total Poin</div>
-                    <div class="loyalty-card__poin">1.240 <span>poin</span></div>
-                    {{-- Progress ke reward berikutnya --}}
-                    <div class="loyalty-card__progress-label">
-                        <span>Menuju 500 poin berikutnya</span>
-                        <span class="loyalty-card__progress-pct">248 / 500</span>
-                    </div>
-                    <div class="loyalty-card__bar">
-                        <div class="loyalty-card__bar-fill" style="width:49%"></div>
-                    </div>
-                    <div class="loyalty-card__bottom">
-                        <span>Rp 1.000 = 1 poin</span>
-                        <span class="loyalty-card__level">Silver ✦</span>
-                    </div>
-                </div>
-
-                {{-- Notif poin masuk --}}
-                <div class="loyalty-notif">
-                    <span class="loyalty-notif__icon">✅</span>
-                    <div>
-                        <div class="loyalty-notif__title">Poin masuk!</div>
-                        <div class="loyalty-notif__sub">+70 poin dari order #LDR-0892</div>
-                    </div>
+            {{-- Kanan: tabel reward --}}
+            <div>
+                <table class="loyalty-table">
+                    <thead>
+                        <tr>
+                            <th>Reward</th>
+                            <th>Poin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cuci gratis 2 kg</td>
+                            <td><span class="loyalty-pts">500 poin</span></td>
+                        </tr>
+                        <tr>
+                            <td>Diskon 20% untuk order berikutnya</td>
+                            <td><span class="loyalty-pts">300 poin</span></td>
+                        </tr>
+                        <tr>
+                            <td>Setrika gratis 3 kg</td>
+                            <td><span class="loyalty-pts">400 poin</span></td>
+                        </tr>
+                        <tr>
+                            <td>Cuci gratis 5 kg</td>
+                            <td><span class="loyalty-pts">1.000 poin</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pickup &amp; delivery gratis</td>
+                            <td><span class="loyalty-pts">600 poin</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="loyalty-note">
+                    Rp 1.000 = 1 poin &nbsp;·&nbsp; Berlaku untuk semua jenis layanan &nbsp;·&nbsp;
+                    Poin tidak kadaluarsa
                 </div>
             </div>
 
