@@ -715,9 +715,9 @@
                 <i class="bi bi-whatsapp"></i>
             </div>
             <div class="flex-grow-1">
-                <h3 class="fw-semibold mb-1" style="color:var(--green-dark)">Aktifkan notifikasi WhatsApp</h3>
+                <h3 class="fw-semibold mb-1" style="color:var(--green-dark)">Aktifkan Notifikasi WhatsApp</h3>
                 <p class="text-muted mb-3" style="font-size:14px">
-                    Kami kirim update otomatis saat cucianmu masuk, sedang diproses, dan siap diambil — langsung ke WhatsApp kamu.
+                    Kami kirim update otomatis saat cucianmu masuk, sedang diproses, dan siap diambil langsung ke WhatsApp kamu.
                 </p>
 
                 {{-- Feedback cek nomor real-time --}}
