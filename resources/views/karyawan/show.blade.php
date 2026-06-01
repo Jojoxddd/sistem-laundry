@@ -1,59 +1,49 @@
 @extends('layouts.app')
-
 @section('title', 'Detail Karyawan')
 @section('page-title', 'Detail Karyawan')
-
 @section('content')
-<div class="row">
-    <div class="col-md-4">
-        <div class="card mb-3">
-            <div class="card-body text-center">
-                <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                    style="width:80px;height:80px;font-size:2rem;">
-                    {{ strtoupper(substr($karyawan->nama, 0, 1)) }}
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{{ route('karyawan.index') }}" class="btn btn-ghost btn-sm"><i class="bi bi-arrow-left me-1"></i>Kembali</a>
+</div>
+<div class="row justify-content-center">
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <div style="width:64px;height:64px;border-radius:50%;background:#f0fdfa;color:#0d9488;
+                    display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin:0 auto 14px">
+                    {{ strtoupper(substr($karyawan->nama,0,1)) }}
                 </div>
-                <h5 class="fw-bold">{{ $karyawan->nama }}</h5>
-                <p class="text-muted mb-1">{{ $karyawan->jabatan }}</p>
-                <p class="text-muted mb-1"><i class="bi bi-phone me-1"></i>{{ $karyawan->no_telp }}</p>
-                <p class="text-muted mb-1"><i class="bi bi-envelope me-1"></i>{{ $karyawan->user->email }}</p>
-                @if($karyawan->alamat)
-                <p class="text-muted small"><i class="bi bi-geo-alt me-1"></i>{{ $karyawan->alamat }}</p>
-                @endif
-                <span class="badge {{ $karyawan->status == 'aktif' ? 'bg-success' : 'bg-secondary' }}">
+                <div style="font-size:1.1rem;font-weight:700">{{ $karyawan->nama }}</div>
+                <div style="font-size:13px;color:#64748b">{{ $karyawan->jabatan }}</div>
+                <span class="badge mt-2 {{ $karyawan->status==='aktif' ? 'badge-aktif' : 'badge-nonaktif' }}">
                     {{ ucfirst($karyawan->status) }}
                 </span>
             </div>
-            <div class="card-footer bg-white text-center">
-                <a href="{{ route('karyawan.edit', $karyawan) }}" class="btn btn-sm btn-warning me-2">
-                    <i class="bi bi-pencil"></i> Edit
-                </a>
-                <a href="{{ route('karyawan.index') }}" class="btn btn-sm btn-secondary">Kembali</a>
+            <div style="border-top:1px solid #f1f5f9">
+                @foreach([
+                    ['label'=>'No. Telepon','value'=>$karyawan->no_telp],
+                    ['label'=>'Tgl Masuk',  'value'=>$karyawan->tanggal_masuk->format('d M Y')],
+                    ['label'=>'Alamat',     'value'=>$karyawan->alamat??'—'],
+                ] as $row)
+                <div class="d-flex justify-content-between px-4 py-3" style="border-bottom:1px solid #f8fafc">
+                    <span style="font-size:12.5px;color:#94a3b8">{{ $row['label'] }}</span>
+                    <span style="font-size:13.5px;font-weight:500">{{ $row['value'] }}</span>
+                </div>
+                @endforeach
             </div>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-white fw-semibold">
-                <i class="bi bi-bag-check me-2 text-success"></i>Order yang Ditangani
-            </div>
-            <div class="card-body p-0">
-                <table class="table table-hover mb-0">
-                    <thead class="table-light">
-                        <tr><th>Kode</th><th>Pelanggan</th><th>Layanan</th><th>Status</th></tr>
-                    </thead>
-                    <tbody>
-                        @forelse($karyawan->orders as $order)
-                        <tr>
-                            <td><a href="{{ route('order.show', $order) }}" class="text-decoration-none">{{ $order->kode_order }}</a></td>
-                            <td>{{ $order->pelanggan->nama }}</td>
-                            <td>{{ $order->layanan->nama_layanan }}</td>
-                            <td><span class="badge badge-{{ $order->status }}">{{ ucfirst($order->status) }}</span></td>
-                        </tr>
-                        @empty
-                        <tr><td colspan="4" class="text-center text-muted py-3">Belum menangani order</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+            <div class="card-body">
+                <div class="d-flex gap-2">
+                    <a href="{{ route('karyawan.edit', $karyawan) }}" class="btn btn-ghost flex-fill btn-sm">
+                        <i class="bi bi-pencil me-1"></i>Edit
+                    </a>
+                    <form action="{{ route('karyawan.destroy', $karyawan) }}" method="POST"
+                          onsubmit="return confirm('Hapus {{ $karyawan->nama }}?')" class="flex-fill">
+                        @csrf @method('DELETE')
+                        <button class="btn btn-ghost w-100 btn-sm" style="color:#dc2626">
+                            <i class="bi bi-trash me-1"></i>Hapus
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

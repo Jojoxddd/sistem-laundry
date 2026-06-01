@@ -1,20 +1,22 @@
 @extends('layouts.app')
-
-@section('title', 'Data Karyawan')
-@section('page-title', 'Data Karyawan')
+@section('title', 'Karyawan')
+@section('page-title', 'Karyawan')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <span class="text-muted">Total: <strong>{{ $karyawan->total() }}</strong> karyawan</span>
+<div class="page-header">
+    <div>
+        <h1>Karyawan</h1>
+        <div class="sub">Total {{ $karyawan->total() }} karyawan terdaftar</div>
+    </div>
     <a href="{{ route('karyawan.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Tambah Karyawan
     </a>
 </div>
 
 <div class="card">
-    <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-            <thead class="table-light">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
                 <tr>
                     <th>#</th>
                     <th>Nama</th>
@@ -28,40 +30,46 @@
             <tbody>
                 @forelse($karyawan as $i => $k)
                 <tr>
-                    <td>{{ $karyawan->firstItem() + $i }}</td>
+                    <td style="color:#94a3b8">{{ $karyawan->firstItem() + $i }}</td>
                     <td>
-                        <strong>{{ $k->nama }}</strong>
-                        <div class="text-muted small">{{ $k->user->email }}</div>
-                    </td>
-                    <td>{{ $k->jabatan }}</td>
-                    <td>{{ $k->no_telp }}</td>
-                    <td>{{ $k->tanggal_masuk->format('d/m/Y') }}</td>
-                    <td>
-                        @if($k->status == 'aktif')
-                            <span class="badge bg-success">Aktif</span>
-                        @else
-                            <span class="badge bg-secondary">Nonaktif</span>
+                        <div style="font-weight:500">{{ $k->nama }}</div>
+                        @if(isset($k->user))
+                        <div style="font-size:11.5px;color:#94a3b8">{{ $k->user->email }}</div>
                         @endif
+                    </td>
+                    <td style="color:#64748b">{{ $k->jabatan }}</td>
+                    <td style="font-family:monospace;font-size:13px">{{ $k->no_telp }}</td>
+                    <td style="color:#64748b">{{ $k->tanggal_masuk->format('d M Y') }}</td>
+                    <td>
+                        <span class="badge {{ $k->status === 'aktif' ? 'badge-aktif' : 'badge-nonaktif' }}">
+                            {{ ucfirst($k->status) }}
+                        </span>
                     </td>
                     <td>
                         <div class="d-flex gap-1">
-                            <a href="{{ route('karyawan.show', $k) }}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
-                            <a href="{{ route('karyawan.edit', $k) }}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
-                            <form action="{{ route('karyawan.destroy', $k) }}" method="POST" onsubmit="return confirm('Hapus karyawan ini?')">
+                            <a href="{{ route('karyawan.show', $k) }}" class="btn btn-icon btn-ghost"><i class="bi bi-eye"></i></a>
+                            <a href="{{ route('karyawan.edit', $k) }}" class="btn btn-icon btn-ghost"><i class="bi bi-pencil"></i></a>
+                            <form action="{{ route('karyawan.destroy', $k) }}" method="POST"
+                                  onsubmit="return confirm('Hapus {{ $k->nama }}?')">
                                 @csrf @method('DELETE')
-                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                <button class="btn btn-icon btn-ghost" style="color:#dc2626"><i class="bi bi-trash"></i></button>
                             </form>
                         </div>
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center text-muted py-4">Belum ada karyawan</td></tr>
+                <tr>
+                    <td colspan="7" class="text-center py-5" style="color:#94a3b8">
+                        <i class="bi bi-person-badge" style="font-size:32px;display:block;margin-bottom:8px"></i>
+                        Belum ada karyawan
+                    </td>
+                </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
     @if($karyawan->hasPages())
-    <div class="card-footer bg-white">{{ $karyawan->links() }}</div>
+    <div class="card-body pt-0 d-flex justify-content-end">{{ $karyawan->links() }}</div>
     @endif
 </div>
 @endsection

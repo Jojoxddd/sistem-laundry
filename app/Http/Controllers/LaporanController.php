@@ -12,8 +12,8 @@ class LaporanController extends Controller
 {
     public function index()
     {
-        $bulan = request('bulan', date('m'));
-        $tahun = request('tahun', date('Y'));
+        $bulan = (int) request('bulan', date('m'));
+        $tahun = (int) request('tahun', date('Y'));
 
         $orders = Order::with(['pelanggan', 'karyawan', 'layanan', 'pembayaran'])
             ->whereMonth('tanggal_masuk', $bulan)
