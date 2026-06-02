@@ -5,9 +5,9 @@
 <style>
 .hero-section {
     background: var(--sky-light);
-    padding: 64px 0 48px;
+    padding: 48px 0 40px;
 }
-.hero-title { font-size: 2.4rem; font-weight: 700; color: #0284C7; line-height: 1.2; }
+.hero-title { font-size: clamp(1.5rem, 4vw, 2.4rem); font-weight: 700; color: #0284C7; line-height: 1.2; }
 .hero-title span { color: #15803D; }
 .feat-card {
     background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
@@ -262,6 +262,45 @@
     position: absolute; right: -20px; top: 50%;
     transform: translateY(-50%);
     z-index: 2; align-items: center; justify-content: center;
+}
+
+/* ── GLOBAL MOBILE FIXES ──────────────────────────── */
+@media (max-width: 767px) {
+    /* Hero: single column, feat cards jadi 2 kolom */
+    .hero-section { padding: 32px 0 28px; }
+    .hero-stats { gap: 16px !important; }
+    .hero-btns { flex-direction: column !important; }
+    .hero-btns .btn { width: 100%; }
+
+    /* Sembunyikan floating feat cards di mobile, ganti teks cukup */
+    .feat-card-area { display: none; }
+
+    /* Estimasi harga: input stack */
+    .calc-box .row { flex-direction: column; }
+
+    /* Section padding lebih kecil */
+    .py-5 { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+
+    /* Loyalty inner sudah handle di atas */
+
+    /* How to: disable arrow absolute */
+    .howto-arrow { display: none !important; }
+
+    /* WA box: stack vertical */
+    .wa-box { flex-direction: column !important; text-align: center; }
+    .wa-box form { flex-direction: column !important; }
+    .wa-box form input,
+    .wa-box form button { width: 100% !important; max-width: 100% !important; }
+
+    /* Footer columns stack */
+    .bl-footer .row { gap: 1rem; }
+}
+@media (max-width: 575px) {
+    .container { padding-left: 16px; padding-right: 16px; }
+    .section-title { font-size: 1.25rem !important; }
+    /* Layanan grid: 2 kolom di HP kecil */
+    .col-6.col-md-4.col-lg-2 { width: 50% !important; }
+    .bl-card { padding: 16px; }
 }
 </style>
 @endpush

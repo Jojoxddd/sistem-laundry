@@ -17,6 +17,10 @@
 .reward-poin { font-size: 1.1rem; font-weight: 700; color: var(--sky-dark); }
 .tx-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
 .tx-row:last-child { border-bottom: none; }
+@media (max-width: 575px) {
+    .rewards-grid .col-6 { width: 50% !important; }
+    .points-big { font-size: 2.2rem; }
+}
 </style>
 @endpush
 

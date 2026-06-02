@@ -21,6 +21,11 @@
 .harga-badge { font-size:1.1rem; font-weight:700; color:var(--sky-dark); }
 .preview-box { background:var(--sky-light); border-radius:14px; padding:20px; }
 .wa-toggle { background:var(--green-light); border-radius:12px; padding:16px 18px; display:flex; align-items:center; gap:14px; }
+@media (max-width: 575px) {
+    .wiz-line { width: 32px; }
+    .order-hero { padding: 28px 0 20px; }
+    .order-hero h1 { font-size: 1.35rem; }
+}
 </style>
 @endpush
 

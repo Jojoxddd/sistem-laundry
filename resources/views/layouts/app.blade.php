@@ -152,13 +152,20 @@
             top: 0;
             z-index: 100;
         }
-        .topbar-left { display: flex; align-items: center; gap: 8px; }
+        .topbar-left { display: flex; align-items: center; gap: 12px; }
         .topbar-title { font-size: 15px; font-weight: 600; color: var(--slate-800); }
-        .topbar-breadcrumb { font-size: 12px; color: var(--slate-500); }
         .topbar-date {
             font-size: 12.5px; color: var(--slate-500);
             background: var(--slate-50); border: 1px solid var(--slate-100);
             padding: 5px 12px; border-radius: 20px;
+        }
+        .btn-hamburger {
+            display: none;
+            width: 34px; height: 34px; border-radius: 8px;
+            background: transparent; border: 1px solid var(--slate-100);
+            align-items: center; justify-content: center;
+            cursor: pointer; font-size: 16px; color: var(--slate-700);
+            flex-shrink: 0;
         }
 
         /* ── MAIN CONTENT ────────────────────────── */
@@ -166,6 +173,32 @@
             margin-left: var(--sidebar-w);
             padding: 24px 28px;
             min-height: calc(100vh - 56px);
+        }
+
+        /* ── OVERLAY (mobile) ────────────────────── */
+        .sidebar-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.45);
+            z-index: 199;
+        }
+        .sidebar-overlay.active { display: block; }
+
+        /* ── RESPONSIVE ──────────────────────────── */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform .25s ease;
+            }
+            .sidebar.open { transform: translateX(0); }
+            .topbar { margin-left: 0; padding: 0 16px; }
+            .main-content { margin-left: 0; padding: 16px; }
+            .btn-hamburger { display: flex; }
+            .topbar-date { display: none; }
+            /* Tabel scroll di mobile */
+            .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            /* Stat cards 2 kolom di mobile */
+            .stat-card .stat-value { font-size: 1.4rem; }
         }
 
         /* ── CARDS ───────────────────────────────── */
@@ -360,9 +393,15 @@
     </div>
 </aside>
 
+{{-- OVERLAY mobile --}}
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
 {{-- TOPBAR --}}
 <header class="topbar">
     <div class="topbar-left">
+        <button class="btn-hamburger" id="hamburger" onclick="toggleSidebar()">
+            <i class="bi bi-list"></i>
+        </button>
         <span class="topbar-title">@yield('page-title', 'Dashboard')</span>
     </div>
     <div class="topbar-date">
@@ -389,6 +428,22 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('open');
+    document.getElementById('sidebar-overlay').classList.toggle('active');
+}
+function closeSidebar() {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('active');
+}
+// Tutup sidebar otomatis saat klik nav link di mobile
+document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) closeSidebar();
+    });
+});
+</script>
 @stack('scripts')
 </body>
 </html>

@@ -39,6 +39,23 @@
         .step-circle { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
         .step-line { width:2px; min-height:24px; background:#e2e8f0; margin:0 auto; }
         .step-line.done { background:var(--green); }
+
+        /* ── Mobile nav drawer ─────────────── */
+        .btn-nav-toggle { display:none; background:none; border:none; font-size:22px; color:#475569; padding:2px 6px; cursor:pointer; }
+        .mobile-menu { display:none; background:#fff; border-top:1px solid #f1f5f9; padding:10px 16px 14px; }
+        .mobile-menu.open { display:block; }
+        .mobile-menu a { display:block; padding:10px 12px; color:#475569; font-size:14px; border-radius:8px; text-decoration:none; }
+        .mobile-menu a:hover { background:#f8fafc; color:var(--sky-dark); }
+        .mobile-menu .mobile-order-btn {
+            display:block; width:100%; text-align:center; margin-top:8px;
+            background:var(--sky-dark); color:#fff; padding:11px; border-radius:10px;
+            font-size:14px; font-weight:600; text-decoration:none;
+        }
+        @media (max-width: 767px) {
+            .btn-nav-toggle { display:block; }
+            .d-none.d-md-flex { display:none !important; }
+            .btn-order-nav { display:none; }
+        }
     </style>
     @stack('styles')
 </head>
@@ -55,8 +72,28 @@
             <a href="{{ route('customer.cek-status') }}" class="nav-link {{ request()->routeIs('customer.cek-status') ? 'active fw-semibold' : '' }}">Cek Status</a>
             <a href="{{ route('customer.loyalty') }}"    class="nav-link {{ request()->routeIs('customer.loyalty')    ? 'active fw-semibold' : '' }}">Poin Saya</a>
         </div>
-        <a href="{{ route('customer.order') }}" class="btn-order-nav {{ request()->routeIs('customer.order*') ? 'opacity-75' : '' }}">
-            <i class="bi bi-bag-plus me-1"></i> Order Cucian
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ route('customer.order') }}" class="btn-order-nav {{ request()->routeIs('customer.order*') ? 'opacity-75' : '' }}">
+                <i class="bi bi-bag-plus me-1"></i> Order Cucian
+            </a>
+            <button class="btn-nav-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
+                <i class="bi bi-list" id="nav-icon"></i>
+            </button>
+        </div>
+    </div>
+    {{-- Mobile dropdown --}}
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="{{ route('customer.home') }}" class="{{ request()->routeIs('customer.home') ? 'fw-semibold' : '' }}">
+            <i class="bi bi-house me-2"></i>Beranda
+        </a>
+        <a href="{{ route('customer.cek-status') }}" class="{{ request()->routeIs('customer.cek-status') ? 'fw-semibold' : '' }}">
+            <i class="bi bi-search me-2"></i>Cek Status Cucian
+        </a>
+        <a href="{{ route('customer.loyalty') }}" class="{{ request()->routeIs('customer.loyalty') ? 'fw-semibold' : '' }}">
+            <i class="bi bi-trophy me-2"></i>Poin Saya
+        </a>
+        <a href="{{ route('customer.order') }}" class="mobile-order-btn">
+            <i class="bi bi-bag-plus me-2"></i>Order Cucian
         </a>
     </div>
 </nav>
@@ -111,6 +148,21 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const icon = document.getElementById('nav-icon');
+    menu.classList.toggle('open');
+    icon.className = menu.classList.contains('open') ? 'bi bi-x-lg' : 'bi bi-list';
+}
+// Tutup menu saat klik link
+document.querySelectorAll('#mobile-menu a').forEach(a => {
+    a.addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.remove('open');
+        document.getElementById('nav-icon').className = 'bi bi-list';
+    });
+});
+</script>
 @stack('scripts')
 </body>
 </html>
