@@ -21,11 +21,6 @@
 .harga-badge { font-size:1.1rem; font-weight:700; color:var(--sky-dark); }
 .preview-box { background:var(--sky-light); border-radius:14px; padding:20px; }
 .wa-toggle { background:var(--green-light); border-radius:12px; padding:16px 18px; display:flex; align-items:center; gap:14px; }
-@media (max-width: 575px) {
-    .wiz-line { width: 32px; }
-    .order-hero { padding: 28px 0 20px; }
-    .order-hero h1 { font-size: 1.35rem; }
-}
 </style>
 @endpush
 
@@ -34,7 +29,7 @@
 <section class="order-hero">
     <div class="container text-center">
         <h1 class="fw-semibold mb-1" style="font-size:1.8rem;color:var(--sky-dark)">
-            <i class="bi bi-bag-plus me-2"></i>Order Cucian Online
+            Order Cucian Online
         </h1>
         <p class="text-muted mb-0">Isi formulir di bawah, antar cucian ke outlet, dan pantau statusnya real-time</p>
     </div>
@@ -112,7 +107,7 @@
                         </div>
 
                         <button type="button" class="btn btn-sky w-100 mt-3 py-2" onclick="goStep(2)">
-                            Lanjut — Pilih Layanan <i class="bi bi-arrow-right ms-2"></i>
+                            Pilih Layanan <i class="bi bi-arrow-right ms-2"></i>
                         </button>
                     </div>
                 </div>
@@ -120,7 +115,7 @@
                 {{-- STEP 2: PILIH LAYANAN --}}
                 <div class="form-section" id="step2">
                     <div class="bl-card">
-                        <h5 class="fw-semibold mb-4"><i class="bi bi-droplet-half me-2" style="color:var(--sky-dark)"></i>Pilih layanan</h5>
+                        <h5 class="fw-semibold mb-4">Pilih layanan</h5>
 
                         <div class="mb-3">
                             @foreach($layanan as $l)
@@ -173,7 +168,7 @@
                                 <i class="bi bi-arrow-left"></i>
                             </button>
                             <button type="button" class="btn btn-sky flex-grow-1 py-2" onclick="goStep(3)">
-                                Lanjut — Konfirmasi <i class="bi bi-arrow-right ms-2"></i>
+                                Konfirmasi <i class="bi bi-arrow-right ms-2"></i>
                             </button>
                         </div>
                     </div>
@@ -182,7 +177,7 @@
                 {{-- STEP 3: KONFIRMASI --}}
                 <div class="form-section" id="step3">
                     <div class="bl-card">
-                        <h5 class="fw-semibold mb-4"><i class="bi bi-clipboard-check me-2" style="color:var(--sky-dark)"></i>Konfirmasi order</h5>
+                        <h5 class="fw-semibold mb-4">Konfirmasi order</h5>
 
                         <div class="preview-box mb-4">
                             <div class="row g-3">
@@ -221,7 +216,7 @@
                                 <i class="bi bi-arrow-left"></i>
                             </button>
                             <button type="submit" class="btn btn-sky flex-grow-1 py-2 fw-semibold">
-                                <i class="bi bi-send me-2"></i>Buat Order Sekarang
+                                Buat Order Sekarang
                             </button>
                         </div>
                     </div>
