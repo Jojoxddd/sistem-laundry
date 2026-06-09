@@ -6,7 +6,6 @@
 .loyalty-hero { background: var(--sky-light); padding: 48px 0 36px; }
 .search-box   { max-width: 480px; margin: 0 auto; }
 
-/* Kartu poin — flat, no gradient */
 .poin-card {
     border: 1.5px solid #e2e8f0;
     border-radius: 18px;
@@ -20,18 +19,15 @@
 .poin-card__hint { font-size: 12px; color: #94a3b8; }
 .poin-card__note { font-size: 12px; color: #94a3b8; border-top: 1px solid #f1f5f9; margin-top: 16px; padding-top: 12px; }
 
-/* Level badge */
 .level-badge { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 99px; }
 .badge-bronze  { background: #FEF3C7; color: #92400E; }
 .badge-silver  { background: #f1f5f9; color: #475569; }
 .badge-gold    { background: #FEF9C3; color: #713F12; }
 .badge-platinum{ background: var(--sky-light); color: var(--sky-dark); }
 
-/* Riwayat */
 .tx-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f8fafc; }
 .tx-row:last-child { border-bottom: none; }
 
-/* Reward card */
 .reward-card {
     border: 1.5px solid #e2e8f0; border-radius: 14px;
     padding: 18px 14px; text-align: center;
@@ -42,7 +38,6 @@
 .reward-card.featured { border-color: var(--sky-dark); }
 .reward-poin { font-size: 15px; font-weight: 700; color: var(--sky-dark); }
 
-/* Info cara dapat poin */
 .info-card {
     background: #fff; border: 1.5px solid #e2e8f0;
     border-radius: 14px; padding: 16px 18px;
@@ -55,7 +50,6 @@
     font-size: 17px; flex-shrink: 0;
 }
 
-/* Level table */
 .level-row {
     display: flex; align-items: center; justify-content: space-between;
     padding: 10px 14px; border-radius: 10px; background: #f8fafc;
@@ -71,17 +65,34 @@
             <h1 class="fw-bold mb-1" style="font-size:1.75rem;color:#0f172a">
                 Pengen liat poin kamu berapa?
             </h1>
-            <p class="text-muted" style="font-size:14px">Masukkan nomor WhatsApp yang terdaftar di outlet</p>
+            <p class="text-muted" style="font-size:14px">
+                Masukkan nama dan nomor HP yang terdaftar di outlet
+            </p>
         </div>
+
         <div class="search-box">
-            <form method="GET" action="{{ route('customer.loyalty') }}" class="d-flex gap-2">
-                <input type="text" name="no_telp" value="{{ $noTelp ?? '' }}"
-                    class="form-control form-control-lg"
-                    placeholder="Nomor WhatsApp terdaftar"
-                    style="border-radius:50px;padding-left:20px">
-                <button type="submit" class="btn btn-sky btn-lg px-4" style="white-space:nowrap">
-                    Cek
-                </button>
+            <form method="GET" action="{{ route('customer.loyalty') }}">
+                <div class="d-flex flex-column gap-2">
+                    <input
+                        type="text"
+                        name="no_telp"
+                        value="{{ $noTelp ?? '' }}"
+                        class="form-control form-control-lg"
+                        placeholder="Nomor HP yang terdaftar"
+                        style="border-radius:50px;padding-left:20px"
+                    >
+                    <input
+                        type="text"
+                        name="nama"
+                        value="{{ $nama ?? '' }}"
+                        class="form-control form-control-lg"
+                        placeholder="Nama kamu"
+                        style="border-radius:50px;padding-left:20px"
+                    >
+                    <button type="submit" class="btn btn-sky btn-lg w-100">
+                        <i class=""></i>Cek Poin Saya
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -90,11 +101,10 @@
 <section class="py-5">
     <div class="container">
 
-        @if($noTelp && !$pelanggan)
+        @if(isset($error) && $error)
         <div class="text-center py-5">
-            <div class="mb-3" style="font-size:48px">🔍</div>
-            <h5 class="fw-semibold mb-1">Nomor tidak ditemukan</h5>
-            <p class="text-muted" style="font-size:14px">Pastikan nomornya sama dengan yang terdaftar di outlet ya.</p>
+            <h5 class="fw-semibold mb-1">Data tidak ditemukan</h5>
+            <p class="text-muted" style="font-size:14px">{{ $error }}</p>
         </div>
 
         @elseif($pelanggan && $loyalty)
@@ -162,11 +172,7 @@
                 <div class="row g-3">
                     @foreach($rewards as $i => $reward)
                     <div class="col-6 col-md-4">
-                        <div class="reward-card h-100 {{ $i === 1 ? 'featured' : '' }}">
-                            @if($i === 1)
-                            <div class="mb-2">
-                            </div>
-                            @endif
+                       <div class="reward-card h-100">
                             <div class="fs-2 mb-2" style="color:var(--sky-dark)">
                                 <i class="bi {{ $reward['icon'] }}"></i>
                             </div>
@@ -201,7 +207,7 @@
             <div class="col-lg-4">
                 <div class="text-center py-4 text-muted">
                     <div class="mb-3" style="font-size:52px;opacity:.2"><i class="bi bi-trophy"></i></div>
-                    <p style="font-size:14px">Masukkan nomor WhatsApp terdaftar untuk cek poin kamu</p>
+                    <p style="font-size:14px">Masukkan nomor HP dan nama untuk cek poin kamu</p>
                 </div>
             </div>
             <div class="col-lg-7">

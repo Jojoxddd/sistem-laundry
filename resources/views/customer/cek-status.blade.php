@@ -38,17 +38,34 @@
             <h1 class="fw-bold mb-1" style="font-size:1.75rem;color:#0f172a">
                 Ingin tahu cucianmu lagi di mana?
             </h1>
-            <p class="text-muted" style="font-size:14px">Masukkan kode order yang kamu dapat waktu antar cucian</p>
+            <p class="text-muted" style="font-size:14px">
+                Masukkan kode order dan nomor HP yang kamu daftarkan
+            </p>
         </div>
+
         <div class="search-box">
-            <form method="GET" action="{{ route('customer.cek-status') }}" class="d-flex gap-2">
-                <input type="text" name="kode" value="{{ $kode ?? '' }}"
-                    class="form-control form-control-lg"
-                    placeholder="Contoh: LDR-20260529-0001"
-                    style="border-radius:50px;padding-left:20px">
-                <button type="submit" class="btn btn-sky btn-lg px-4" style="white-space:nowrap">
-                    Cek
-                </button>
+            <form method="GET" action="{{ route('customer.cek-status') }}">
+                <div class="d-flex flex-column gap-2">
+                    <input
+                        type="text"
+                        name="kode"
+                        value="{{ $kode ?? '' }}"
+                        class="form-control form-control-lg"
+                        placeholder="Kode order — contoh: LDR-20260529-0001"
+                        style="border-radius:50px;padding-left:20px"
+                    >
+                    <input
+                        type="text"
+                        name="no_telp"
+                        value="{{ $noTelp ?? '' }}"
+                        class="form-control form-control-lg"
+                        placeholder="Nomor HP yang terdaftar"
+                        style="border-radius:50px;padding-left:20px"
+                    >
+                    <button type="submit" class="btn btn-sky btn-lg w-100">
+                        <i class="bi bi-search me-2"></i>Cek Status
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -57,14 +74,10 @@
 <section class="py-5">
     <div class="container">
 
-        @if($kode && !$order)
+        @if(isset($error) && $error)
         <div class="text-center py-5">
-            <div class="mb-3" style="font-size:48px">🔍</div>
-            <h5 class="fw-semibold mb-1">Kode tidak ditemukan</h5>
-            <p class="text-muted" style="font-size:14px">
-                Pastikan kodenya sudah benar ya.<br>
-                Formatnya biasanya <strong>LDR-YYYYMMDD-XXXX</strong>
-            </p>
+            <h5 class="fw-semibold mb-1">Data tidak ditemukan</h5>
+            <p class="text-muted" style="font-size:14px">{{ $error }}</p>
         </div>
 
         @elseif($order)
@@ -169,16 +182,10 @@
             @endif
         </div>
 
-        <!-- <div class="text-center mt-2">
-            <a href="{{ route('customer.loyalty') }}" class="btn btn-sky-outline">
-                <i class="bi bi-trophy me-2"></i>Cek poin loyalty saya
-            </a>
-        </div> -->
-
         @else
         <div class="text-center py-5 text-muted">
             <div class="mb-3" style="font-size:52px;opacity:.2"><i class="bi bi-search"></i></div>
-            <p style="font-size:14px">Masukkan kode order di atas untuk lihat status cucianmu</p>
+            <p style="font-size:14px">Masukkan kode order dan nomor HP di atas untuk lihat status cucianmu</p>
         </div>
         @endif
 
