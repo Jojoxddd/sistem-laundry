@@ -48,7 +48,6 @@ class CustomerController extends Controller
             'notif_wa'   => 'nullable|boolean',
         ]);
 
-        // Cari atau buat pelanggan baru otomatis
         $pelanggan = Pelanggan::where('no_telp', $request->no_telp)->first();
         if (!$pelanggan) {
             $pelanggan = Pelanggan::create([
@@ -58,7 +57,6 @@ class CustomerController extends Controller
                 'notif_wa' => $request->boolean('notif_wa'),
             ]);
         } else {
-            // Update nama/alamat jika sudah ada, toggle notif_wa jika diminta
             $pelanggan->update([
                 'nama'     => $request->nama,
                 'alamat'   => $request->alamat ?? $pelanggan->alamat,
@@ -71,7 +69,6 @@ class CustomerController extends Controller
         $tglMasuk    = Carbon::today();
         $tglSelesai  = Carbon::today()->addDays($layanan->estimasi_hari);
 
-        // Ambil karyawan pertama yang aktif sebagai default (bisa diubah admin nanti)
         $karyawan = Karyawan::where('status', 'aktif')->first();
         if (!$karyawan) {
             return back()->withInput()->with('error', 'Belum ada karyawan aktif. Hubungi outlet kami.');
@@ -90,7 +87,6 @@ class CustomerController extends Controller
             'catatan'         => $request->catatan,
         ]);
 
-        // Kirim notifikasi WA jika diminta
         if ($pelanggan->notif_wa) {
             $this->wa->notifOrderBaru(
                 $pelanggan->no_telp,
@@ -116,29 +112,63 @@ class CustomerController extends Controller
         return view('customer.order-sukses', compact('order'));
     }
 
-    /** Cek status cucian */
+    /**
+     * Cek status cucian.
+     *
+     * SECURITY FIX: Wajib input kode_order + no_telp secara bersamaan.
+     * Kode order saja tidak cukup — harus cocok dengan no HP pemiliknya.
+     */
     public function cekStatus(Request $request)
     {
-        $order = null;
-        $kode  = $request->query('kode');
-        if ($kode) {
-            $order = Order::with(['pelanggan', 'layanan', 'pembayaran'])
-                ->where('kode_order', $kode)->first();
-        }
+        $order  = null;
+        $error  = null;
+        $kode   = $request->query('kode');
+        $noTelp = $request->query('no_telp');
         $layanan = Layanan::all();
-        return view('customer.cek-status', compact('order', 'kode', 'layanan'));
+
+        if ($kode && $noTelp) {
+            // Cari order berdasarkan kode + no_telp pelanggan sekaligus
+            $order = Order::with(['pelanggan', 'layanan', 'pembayaran'])
+                ->where('kode_order', $kode)
+                ->whereHas('pelanggan', function ($q) use ($noTelp) {
+                    $q->where('no_telp', $noTelp);
+                })
+                ->first();
+
+            // Jangan beritahu apakah kode atau no HP yang salah
+            // — pesan generik supaya tidak bisa ditebak satu per satu
+            if (!$order) {
+                $error = 'Kode order atau nomor HP tidak ditemukan. Pastikan keduanya benar.';
+            }
+        } elseif ($kode || $noTelp) {
+            // Salah satu diisi tapi tidak keduanya
+            $error = 'Masukkan kode order dan nomor HP secara bersamaan.';
+        }
+
+        return view('customer.cek-status', compact('order', 'kode', 'noTelp', 'error', 'layanan'));
     }
 
-    /** Loyalty points */
+    /**
+     * Loyalty points.
+     *
+     * SECURITY FIX: Hanya tampilkan poin setelah verifikasi no_telp + nama.
+     * no_telp saja tidak cukup — harus cocok dengan nama terdaftar.
+     */
     public function loyaltyPoints(Request $request)
     {
         $pelanggan = null;
         $loyalty   = null;
         $transaksi = collect();
+        $error     = null;
         $noTelp    = $request->query('no_telp');
+        $nama      = $request->query('nama');
 
-        if ($noTelp) {
-            $pelanggan = Pelanggan::where('no_telp', $noTelp)->first();
+        if ($noTelp && $nama) {
+            // Verifikasi: no_telp + nama harus cocok
+            $pelanggan = Pelanggan::where('no_telp', $noTelp)
+                ->whereRaw('LOWER(nama) = ?', [strtolower(trim($nama))])
+                ->first();
+
             if ($pelanggan) {
                 $loyalty = LoyaltyPoint::firstOrCreate(
                     ['pelanggan_id' => $pelanggan->id],
@@ -146,11 +176,16 @@ class CustomerController extends Controller
                 );
                 $transaksi = LoyaltyTransaction::where('pelanggan_id', $pelanggan->id)
                     ->latest()->take(10)->get();
+            } else {
+                // Pesan generik — jangan bilang "nama salah" atau "no HP tidak ada"
+                $error = 'Data tidak ditemukan. Pastikan nomor HP dan nama sesuai data pendaftaran.';
             }
+        } elseif ($noTelp || $nama) {
+            $error = 'Masukkan nomor HP dan nama secara bersamaan.';
         }
 
         $rewards = $this->daftarReward();
-        return view('customer.loyalty', compact('pelanggan', 'loyalty', 'transaksi', 'noTelp', 'rewards'));
+        return view('customer.loyalty', compact('pelanggan', 'loyalty', 'transaksi', 'noTelp', 'nama', 'error', 'rewards'));
     }
 
     /** Tukar poin */
@@ -200,21 +235,18 @@ class CustomerController extends Controller
         return back()->with('success', 'Notifikasi WhatsApp dinonaktifkan.');
     }
 
-    /** AJAX: cek nomor */
+    /**
+     * AJAX: cek nomor.
+     *
+     * SECURITY FIX: Hanya kembalikan apakah nomor terdaftar atau tidak.
+     * Nama dan status notif_wa TIDAK dikembalikan — data ini sensitif.
+     */
     public function cekNomor(Request $request)
     {
         $nomor     = $request->query('no_telp', '');
-        $pelanggan = Pelanggan::where('no_telp', $nomor)->first();
+        $terdaftar = Pelanggan::where('no_telp', $nomor)->exists();
 
-        if (!$pelanggan) {
-            return response()->json(['terdaftar' => false]);
-        }
-
-        return response()->json([
-            'terdaftar' => true,
-            'nama'      => $pelanggan->nama,
-            'notif_wa'  => (bool) $pelanggan->notif_wa,
-        ]);
+        return response()->json(['terdaftar' => $terdaftar]);
     }
 
     /** AJAX: estimasi harga */
@@ -246,4 +278,4 @@ class CustomerController extends Controller
             ['id' => 'express',    'nama' => 'Upgrade ke express',        'poin' => 800,  'icon' => 'bi-arrow-up-circle'],
         ];
     }
-}
+} 
