@@ -21,6 +21,27 @@
 .harga-badge { font-size:1.1rem; font-weight:700; color:var(--sky-dark); }
 .preview-box { background:var(--sky-light); border-radius:14px; padding:20px; }
 .wa-toggle { background:var(--green-light); border-radius:12px; padding:16px 18px; display:flex; align-items:center; gap:14px; }
+
+@media (max-width: 768px) {
+    .order-hero { padding: 28px 0 20px; }
+    .order-hero h1 { font-size: 1.4rem; }
+    .wiz-line { width: 40px; }
+}
+@media (max-width: 575px) {
+    .order-hero { padding: 22px 0 16px; }
+    .order-hero h1 { font-size: 1.25rem; }
+    .wiz-line { width: 24px; }
+    .wiz-label { font-size: 10px; }
+    .wiz-circle { width: 30px; height: 30px; font-size: 12px; }
+    .layanan-option { padding: 10px 12px; }
+    .harga-badge { font-size: 1rem; }
+    .wa-toggle { flex-direction: column; text-align: center; gap: 10px; }
+    .preview-box { padding: 14px; }
+}
+@media (max-width: 390px) {
+    .wiz-line { width: 16px; }
+    .wiz-label { display: none; }
+}
 </style>
 @endpush
 

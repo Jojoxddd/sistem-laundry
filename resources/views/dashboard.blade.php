@@ -1,4 +1,29 @@
 @extends('layouts.app')
+@push('styles')
+<style>
+@media (max-width: 575px) {
+    .page-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .page-header h1 { font-size: 1.1rem; }
+    .page-header .btn { width: 100%; text-align: center; }
+    .table tbody td { padding: 8px 10px; font-size: 12.5px; }
+    .table thead th { padding: 7px 10px; font-size: 10.5px; }
+    .card-body { padding: 14px; }
+    .card-header { padding: 12px 14px; }
+    .btn { font-size: 13px; }
+    .btn-icon { width: 26px; height: 26px; font-size: 12px; }
+    .stat-card { padding: 14px; }
+    .stat-value { font-size: 1.3rem !important; }
+    .form-label { font-size: 12px; }
+    .form-control, .form-select { font-size: 13px; padding: 7px 10px; }
+}
+@media (max-width: 390px) {
+    .table tbody td { padding: 7px 8px; font-size: 12px; }
+    .badge { font-size: 10.5px; padding: 3px 7px; }
+    .card-body { padding: 12px; }
+}
+</style>
+@endpush
+
 @section('title', 'Dashboard')
 @section('page-title', 'Dashboard')
 

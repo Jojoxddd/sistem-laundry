@@ -186,19 +186,53 @@
 
         /* ── RESPONSIVE ──────────────────────────── */
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform .25s ease;
-            }
+            .sidebar { transform: translateX(-100%); transition: transform .25s ease; }
             .sidebar.open { transform: translateX(0); }
             .topbar { margin-left: 0; padding: 0 16px; }
             .main-content { margin-left: 0; padding: 16px; }
             .btn-hamburger { display: flex; }
             .topbar-date { display: none; }
-            /* Tabel scroll di mobile */
             .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-            /* Stat cards 2 kolom di mobile */
             .stat-card .stat-value { font-size: 1.4rem; }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .page-header .btn { width: 100%; text-align: center; }
+        }
+
+        @media (max-width: 575px) {
+            .main-content { padding: 12px; }
+            .topbar { padding: 0 12px; height: 50px; }
+            .topbar-title { font-size: 14px; }
+            .stat-card { padding: 14px; }
+            .stat-value { font-size: 1.25rem !important; }
+            .stat-label { font-size: 11px; }
+            .stat-icon { width: 32px; height: 32px; font-size: 14px; }
+            .card-header { padding: 12px 14px; font-size: 13px; }
+            .card-body { padding: 14px; }
+            .table tbody td { padding: 9px 10px; font-size: 12.5px; }
+            .table thead th { padding: 8px 10px; font-size: 10.5px; }
+            .badge { font-size: 11px; padding: 3px 8px; }
+            .btn { font-size: 13px; }
+            .btn-sm { font-size: 12px; padding: 4px 8px; }
+            .btn-icon { width: 26px; height: 26px; font-size: 12px; }
+            .form-label { font-size: 12.5px; }
+            .form-control, .form-select { font-size: 13px; padding: 7px 10px; border-radius: 7px; }
+            .sidebar .nav-link { font-size: 13px; padding: 7px 9px; }
+            .sidebar-section { font-size: 9.5px; }
+        }
+
+        @media (max-width: 390px) {
+            .main-content { padding: 10px; }
+            .topbar { padding: 0 10px; }
+            .topbar-title { font-size: 13px; }
+            .table tbody td { padding: 7px 8px; font-size: 12px; }
+            .stat-value { font-size: 1.1rem !important; }
+            .card-body { padding: 12px; }
+        }
+
+        @media (max-width: 360px) {
+            .main-content { padding: 8px; }
+            .table tbody td { padding: 6px 7px; font-size: 11.5px; }
+            .sidebar-brand .logo-text { font-size: 13px; }
         }
 
         /* ── CARDS ───────────────────────────────── */

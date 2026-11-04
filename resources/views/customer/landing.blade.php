@@ -265,42 +265,55 @@
 }
 
 /* ── GLOBAL MOBILE FIXES ──────────────────────────── */
-@media (max-width: 767px) {
-    /* Hero: single column, feat cards jadi 2 kolom */
-    .hero-section { padding: 32px 0 28px; }
+@media (max-width: 768px) {
+    .hero-section { padding: 32px 0 24px; }
+    .hero-title { font-size: clamp(1.5rem, 5vw, 2rem) !important; }
     .hero-stats { gap: 16px !important; }
-    .hero-btns { flex-direction: column !important; }
-    .hero-btns .btn { width: 100%; }
-
-    /* Sembunyikan floating feat cards di mobile, ganti teks cukup */
+    .hero-btns { flex-direction: column !important; gap: 10px !important; }
+    .hero-btns .btn { width: 100%; justify-content: center; }
     .feat-card-area { display: none; }
-
-    /* Estimasi harga: input stack */
-    .calc-box .row { flex-direction: column; }
-
-    /* Section padding lebih kecil */
-    .py-5 { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
-
-    /* Loyalty inner sudah handle di atas */
-
-    /* How to: disable arrow absolute */
     .howto-arrow { display: none !important; }
-
-    /* WA box: stack vertical */
     .wa-box { flex-direction: column !important; text-align: center; }
     .wa-box form { flex-direction: column !important; }
-    .wa-box form input,
-    .wa-box form button { width: 100% !important; max-width: 100% !important; }
-
-    /* Footer columns stack */
-    .bl-footer .row { gap: 1rem; }
+    .wa-box form input, .wa-box form button { width: 100% !important; max-width: 100% !important; }
+    .loyalty-inner { grid-template-columns: 1fr !important; gap: 32px; padding: 40px 0; }
+    .calc-box .row { flex-direction: column; }
+    .py-5 { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
 }
 @media (max-width: 575px) {
-    .container { padding-left: 16px; padding-right: 16px; }
-    .section-title { font-size: 1.25rem !important; }
-    /* Layanan grid: 2 kolom di HP kecil */
-    .col-6.col-md-4.col-lg-2 { width: 50% !important; }
+    .container { padding-left: 14px; padding-right: 14px; }
+    .hero-section { padding: 24px 0 20px; }
+    .hero-title { font-size: 1.45rem !important; line-height: 1.25; }
+    .hero-stats { gap: 12px !important; }
+    .stat-num { font-size: 1.25rem !important; }
+    .stat-lbl { font-size: 11px !important; }
+    .section-title { font-size: 1.2rem !important; }
+    .section-sub { font-size: 13px !important; }
+    .py-5 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
     .bl-card { padding: 16px; }
+    .calc-box { padding: 16px; }
+    .loyalty-heading { font-size: 1.35rem !important; }
+    .loyalty-desc { font-size: 13.5px; }
+    .loyalty-table tbody td { font-size: 13px; }
+    .loyalty-pts { font-size: 12px; padding: 2px 8px; }
+    .howto-card { padding: 16px 12px; }
+    .svc-card { padding: 14px 10px 12px; }
+    .wa-box { padding: 20px 16px !important; }
+    .bl-footer .row { gap: 0.75rem; }
+    .bl-footer { padding: 24px 0 14px; }
+}
+@media (max-width: 390px) {
+    .container { padding-left: 12px; padding-right: 12px; }
+    .hero-title { font-size: 1.3rem !important; }
+    .hero-btns .btn { font-size: 13.5px; padding: 10px 14px; }
+    .loyalty-pts { font-size: 11.5px; }
+    .loyalty-table tbody td { font-size: 12.5px; }
+}
+@media (max-width: 360px) {
+    .hero-title { font-size: 1.2rem !important; }
+    .section-title { font-size: 1.1rem !important; }
+    .loyalty-heading { font-size: 1.2rem !important; }
+    .svc-card__name { font-size: 12px; }
 }
 </style>
 @endpush

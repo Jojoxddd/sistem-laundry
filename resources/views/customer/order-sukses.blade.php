@@ -44,6 +44,25 @@
     text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
 }
 .back-link:hover { color: var(--sky-dark); }
+
+@media (max-width: 768px) {
+    .sukses-hero { padding: 36px 0; }
+    .sukses-hero h1 { font-size: 1.5rem; }
+    .kode-order { font-size: 1.5rem; letter-spacing: 1px; }
+}
+@media (max-width: 575px) {
+    .sukses-hero { padding: 28px 0; }
+    .sukses-hero h1 { font-size: 1.25rem; }
+    .kode-box { padding: 16px; }
+    .kode-order { font-size: 1.3rem; }
+    .next-step { padding: 12px 14px; }
+    .step-num { width: 30px; height: 30px; font-size: 13px; }
+    .d-flex.gap-3.mt-4 { flex-direction: column !important; }
+    .d-flex.gap-3.mt-4 .btn { width: 100%; }
+}
+@media (max-width: 390px) {
+    .kode-order { font-size: 1.1rem; letter-spacing: 0; }
+}
 </style>
 @endpush
 
