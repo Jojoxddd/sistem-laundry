@@ -344,7 +344,7 @@
             <div class="col-lg-6">
                 <div class="hero-float-wrap">
                     {{-- Gambar karakter --}}
-                    <img src="{{ asset('/images/laundry.svg') }}"
+                    <img src="/images/laundry.svg"
                         alt="Karakter laundry"
                         class="hero-float-img">
 
