@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\URL; // <-- Tambahkan import ini
+use Illuminate\Support\Facades\URL; // <-- Tambahkan ini
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,7 +14,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Paksa HTTPS di environment production/Vercel
         if (config('app.env') === 'production' || isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             URL::forceScheme('https');
         }
