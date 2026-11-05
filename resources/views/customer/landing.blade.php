@@ -345,8 +345,8 @@
                 <div class="hero-float-wrap">
                     {{-- Gambar karakter --}}
                     <img src="{{ asset('images/laundry.svg') }}"
-                         alt="Karakter laundry"
-                         class="hero-float-img">
+                        alt="Karakter laundry"
+                        class="hero-float-img">
 
                     {{-- Card 1: kiri atas — Estimasi --}}
                     <div class="float-card float-card--1">
