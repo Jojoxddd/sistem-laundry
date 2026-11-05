@@ -1,6 +1,5 @@
 <?php
 
-// Buat direktori sementara di /tmp (karena Vercel bersifat read-only)
 $directories = [
     '/tmp/storage/app/public',
     '/tmp/storage/framework/views',
@@ -17,9 +16,7 @@ foreach ($directories as $dir) {
     }
 }
 
-// Redirect path storage Laravel ke /tmp
 putenv('APP_STORAGE=/tmp/storage');
 putenv('VIEW_COMPILED_PATH=/tmp/views');
 
-// Jalankan Laravel
 require __DIR__ . '/../public/index.php';
