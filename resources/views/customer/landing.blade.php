@@ -321,74 +321,49 @@
 @section('content')
 
 {{-- HERO --}}
-<section class="hero-section">
-    <div class="container">
-        <div class="row align-items-center g-4">
-            <div class="col-lg-6">
-                <h1 class="hero-title mb-3">
-                    Laundry Bersih,<br><span>Hidup Lebih Ringan</span>
+<!-- PASTIKAN DIV UTAMA HERO MEMILIKI CLASS 'relative' -->
+<section class="relative bg-blue-50/50 py-16 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative">
+
+            <!-- Kolom Kiri: Teks & Tombol -->
+            <div>
+                <h1 class="text-4xl font-bold text-slate-900 leading-tight">
+                    Laundry Bersih,<br>
+                    <span class="text-emerald-600">Hidup Lebih Ringan</span>
                 </h1>
-                <p class="text-muted mb-4" style="font-size:15px;line-height:1.7">
-                    Layanan laundry profesional dengan estimasi harga transparan, live tracking status cucian,
-                    notifikasi WhatsApp otomatis, dan program loyalty rewards untuk pelanggan setia.
+                <p class="mt-4 text-slate-600">
+                    Layanan laundry profesional dengan estimasi harga transparan...
                 </p>
-                <div class="d-flex gap-3 flex-wrap">
-                    <a href="#estimasi" class="btn btn-sky btn-lg px-4">
-                        <i class="bi bi-calculator me-2"></i>Hitung Estimasi
-                    </a>
-                    <a href="{{ route('customer.cek-status') }}" class="btn btn-sky-outline btn-lg px-4">
-                        <i class="bi bi-geo-alt me-2"></i>Cek Status Cucian
-                    </a>
+                <div class="mt-6 flex flex-wrap gap-4">
+                    <a href="#" class="px-6 py-3 bg-cyan-600 text-white rounded-xl font-medium">Hitung Estimasi</a>
+                    <a href="#" class="px-6 py-3 border border-cyan-600 text-cyan-600 rounded-xl font-medium">Cek Status Cucian</a>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="hero-float-wrap">
-                    {{-- Gambar karakter --}}
-                    <img src="{{ asset('images/laundry.svg') }}"
-                         alt="Karakter laundry"
-                         class="hero-float-img">
 
-                    {{-- Card 1: kiri atas — Estimasi --}}
-                    <div class="float-card float-card--1">
-                        <div class="float-card__icon" style="background:var(--sky-light);color:var(--sky-dark)">
-                            <i class="bi bi-calculator"></i>
-                        </div>
-                        <div>
-                            <div class="float-card__title">Estimasi harga otomatis</div>
-                        </div>
+            <!-- Kolom Kanan: Card Floating (Wajib relative pada parent card) -->
+            <div class="relative w-full h-64 lg:h-80 flex items-center justify-center">
+                <!-- Ubah dari absolute yang acak menjadi flex/grid layout agar tidak saling bertumpuk -->
+                <div class="grid grid-cols-2 gap-4 w-full max-w-md">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3">
+                        <span class="p-2 bg-cyan-50 text-cyan-600 rounded-lg">📊</span>
+                        <span class="text-sm font-semibold text-slate-700">Estimasi harga otomatis</span>
                     </div>
-
-                    {{-- Card 2: kiri bawah — Loyalty --}}
-                    <div class="float-card float-card--2">
-                        <div class="float-card__icon" style="background:#DCFCE7;color:#14532D">
-                            <i class="bi bi-trophy"></i>
-                        </div>
-                        <div>
-                            <div class="float-card__title">Loyalty points</div>
-                        </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3">
+                        <span class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">💬</span>
+                        <span class="text-sm font-semibold text-slate-700">Notifikasi WhatsApp</span>
                     </div>
-
-                    {{-- Card 3: kanan atas — WhatsApp --}}
-                    <div class="float-card float-card--3">
-                        <div class="float-card__icon" style="background:var(--green-light);color:var(--green-dark)">
-                            <i class="bi bi-whatsapp"></i>
-                        </div>
-                        <div>
-                            <div class="float-card__title">Notifikasi WhatsApp</div>
-                        </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3">
+                        <span class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">🏆</span>
+                        <span class="text-sm font-semibold text-slate-700">Loyalty points</span>
                     </div>
-
-                    {{-- Card 4: kanan bawah — Live tracking --}}
-                    <div class="float-card float-card--4">
-                        <div class="float-card__icon" style="background:var(--sky-light);color:var(--sky-dark)">
-                            <i class="bi bi-geo-alt"></i>
-                        </div>
-                        <div>
-                            <div class="float-card__title">Live tracking</div>
-                        </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3">
+                        <span class="p-2 bg-cyan-50 text-cyan-600 rounded-lg">📍</span>
+                        <span class="text-sm font-semibold text-slate-700">Live tracking</span>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </section>
