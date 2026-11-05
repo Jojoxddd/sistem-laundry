@@ -623,28 +623,6 @@
             </div>
 
         </div>
-
-        <!-- {{-- Dynamic services from database --}}
-        @if($layanan->count())
-        <div class="text-center mb-3">
-            <span class="svc-badge">Tarif & Layanan</span>
-        </div>
-        <div class="row g-3">
-            @foreach($layanan as $l)
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="svc-price-card h-100">
-                    <div class="svc-price-card__icon"><i class="bi bi-droplet-half"></i></div>
-                    <div class="svc-price-card__name">{{ $l->nama_layanan }}</div>
-                    <div class="svc-price-card__harga">Rp {{ number_format($l->harga_per_kg, 0, ',', '.') }}<span>/kg</span></div>
-                    <div class="svc-price-card__hari"><i class="bi bi-clock me-1"></i>{{ $l->estimasi_hari }} hari</div>
-                    @if($l->keterangan)
-                    <div class="svc-price-card__ket">{{ $l->keterangan }}</div>
-                    @endif
-                </div>
-            </div>
-            @endforeach
-        </div> -->
-        @endif
     </div>
 </section>
 
