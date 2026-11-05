@@ -854,6 +854,14 @@
     </div>
 </section>
 
+<footer class="bg-slate-900 text-slate-400 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm">
+            <p>&copy; {{ date('Y') }} Bless Laundry. All rights reserved.</p>
+        </div>
+    </footer>
+
+</div>
+
 @endsection
 
 @push('scripts')
