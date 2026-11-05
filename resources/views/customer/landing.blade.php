@@ -624,6 +624,7 @@
 
         </div>
     </div>
+    </div>
 </section>
 
 {{-- ESTIMASI HARGA --}}
