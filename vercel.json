@@ -7,8 +7,7 @@
     "api/index.php": { "runtime": "vercel-php@0.7.3" }
   },
   "routes": [
-    { "src": "/build/(.*)", "dest": "/build/$1" },
-    { "src": "/(.*\\.(css|js|map|png|jpg|jpeg|gif|svg|ico|webp|woff2?|txt))", "dest": "/$1" },
+    { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/api/index.php" }
   ]
 }
